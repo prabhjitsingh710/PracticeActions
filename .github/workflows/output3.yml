@@ -1,0 +1,8 @@
+name: Output detailed logs
+on: push
+jobs:
+    info:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Verbose logs
+              run: echo "${{toJSON(github)}}"

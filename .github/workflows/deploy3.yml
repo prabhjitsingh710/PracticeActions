@@ -1,0 +1,50 @@
+name: third project
+on: push
+jobs:
+    Lint:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Using Checkout action
+              uses: actions/checkout@v4
+            - name: Setting up nodeJS ver
+              uses: actions/setup-node@v4
+              with:
+                node-version: 18
+            - name: Installing Dependencies  
+              run: npm ci
+            - name: Now Lint in process
+              run: npm lint
+            - name: linting....
+              run: echo "lint completed"
+    Test:
+        needs: Lint
+        runs-on: ubuntu-latest
+        steps:
+            - name: Using Checkout action
+              uses: actions/checkout@v4
+            - name: Setting up nodeJS ver
+              uses: actions/setup-node@v4
+              with:
+                node-version: 18
+            - name: Installing Dependencies  
+              run: npm ci
+            - name: Now Test in process
+              run: npm test
+            - name: Testing....
+              run: echo "Test completed"
+    Deploy:
+        needs: [Test,Lint]
+        runs-on: ubuntu-latest
+        steps:
+            - name: Using Checkout action
+              uses: actions/checkout@v4
+            - name: Setting up nodeJS ver
+              uses: actions/setup-node@v4
+              with:
+                node-version: 18
+            - name: Installing Dependencies  
+              run: npm ci
+            - name: Now deploy in process
+              run: npm run build
+            - name: deploying....
+              run: echo "deploy completed"
