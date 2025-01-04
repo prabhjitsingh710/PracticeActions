@@ -6,14 +6,10 @@ jobs:
         steps:
             - name: Using Checkout action
               uses: actions/checkout@v4
-            - name: Setting up nodeJS ver
-              uses: actions/setup-node@v4
-              with:
-                node-version: 18
             - name: Installing Dependencies  
               run: npm ci
             - name: Now Lint in process
-              run: npm run
+              run: npm run lint
             - name: linting....
               run: echo "lint completed"
     Test:
