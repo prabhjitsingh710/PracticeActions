@@ -13,7 +13,7 @@ jobs:
             - name: Installing Dependencies  
               run: npm ci
             - name: Now Lint in process
-              run: npm lint
+              run: npm run lint
             - name: linting....
               run: echo "lint completed"
     Test:
