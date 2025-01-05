@@ -12,17 +12,7 @@ on:
             # Second one: feat/new, feat/new/button
             # Foooooooooo
 jobs:
-    Lint:
-        runs-on: ubuntu-latest
-        steps:
-            - name: Using Checkout action
-              uses: actions/checkout@v4
-            - name: Installing Dependencies  
-              run: npm ci
-            - name: Now Lint in process
-              run: echo "lint completed"
     Test:
-        needs: Lint
         runs-on: ubuntu-latest
         steps:
             - name: Using Checkout action
@@ -37,8 +27,8 @@ jobs:
               run: npm test
             - name: Testing....
               run: echo "Test completed"
-    Deploy:
-        needs: [Test,Lint]
+    Build:
+        needs: Test
         runs-on: ubuntu-latest
         steps:
             - name: Using Checkout action #so code can appear here
@@ -49,7 +39,7 @@ jobs:
                 node-version: 18
             - name: Installing Dependencies  #Dependencies
               run: npm ci
-            - name: Now deploy in process
+            - name: Now build in process
               run: npm run build
             - name: Saving Artifacts #Saving artifacts
               uses: actions/upload-artifact@v4
@@ -58,5 +48,17 @@ jobs:
                 path: |
                   dist
                   package.json
+            - name: building....
+              run: echo "build completed"
+    Deploy:
+        needs: Build
+        runs-on: ubuntu-latest
+        steps:
+            - name: downloading Artifacts #downloading artifacts
+              uses: actions/download-artifact@v4
+              with:
+                name: Output files
+            - name: listing files
+              run: ls
             - name: deploying....
-              run: echo "deploy completed"
+              run: echo "deploying completed"
