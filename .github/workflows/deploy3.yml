@@ -1,5 +1,16 @@
 name: third project
-on: push
+on: 
+    pull_request:
+        types:
+            - opened
+    push:
+        branches:
+            - main
+            - master 
+            # We can also mention:
+            # 'dev-*' and 'feat/**' first one accepts: dev-new, dev-this-is-new
+            # Second one: feat/new, feat/new/button
+            # Foooooooooo
 jobs:
     Lint:
         runs-on: ubuntu-latest
@@ -32,15 +43,22 @@ jobs:
         needs: [Test,Lint]
         runs-on: ubuntu-latest
         steps:
-            - name: Using Checkout action
+            - name: Using Checkout action #so code can appear here
               uses: actions/checkout@v4
-            - name: Setting up nodeJS ver
+            - name: Setting up nodeJS ver #installing node JS
               uses: actions/setup-node@v4
               with:
                 node-version: 18
-            - name: Installing Dependencies  
+            - name: Installing Dependencies  #Dependencies
               run: npm ci
             - name: Now deploy in process
               run: npm run build
+            - name: Saving Artifacts #Saving artifacts
+              uses: actions/upload-artifact@v4
+              with:
+                name: Output files
+                path: |
+                  dist
+                  package.json
             - name: deploying....
               run: echo "deploy completed"
