@@ -21,8 +21,19 @@ jobs:
               uses: actions/setup-node@v4
               with:
                 node-version: 18
+            - name: Caching dependencies #Caching dependencies
+              uses: actions/cache@v4
+              with:
+                path: ~/.npm 
+#This is the path where dependencies are being downloaded in ubuntu
+#It may vary OS to OS or need to need, what need to be cached
+                key: storedfoo-${{hashFiles('**/package-lock.json')}} #this file contains all the dependencies
+# to be downloaded. We used '**' doesn't matter where that package-lock.json file is
+#It will find all files similar to it and cache/hash it.  
             - name: Installing Dependencies  
-              run: npm ci
+              run: npm ci 
+#Now, this step will not be removed but instead it will fetch the dependencies
+#From the above path we mentioned
             - name: Now Test in process
               run: npm test
             - name: Testing....
@@ -30,6 +41,8 @@ jobs:
     Build:
         needs: Test
         runs-on: ubuntu-latest
+        outputs:
+          script-file: ${{steps.first-job.outputs.script-file}} #Extracting output in this job
         steps:
             - name: Using Checkout action #so code can appear here
               uses: actions/checkout@v4
@@ -48,7 +61,10 @@ jobs:
                 path: |
                   dist
                   package.json
-            - name: building....
+            - name: Saving Job Outputs now artifacts #Saving Job Outputs
+              id: first-job
+              run: find dist/assets/*.js -type f -execdis echo 'script-file={}' >> $GITHUB_OUTPUT ';'
+            - name: Building....  
               run: echo "build completed"
     Deploy:
         needs: Build
@@ -60,5 +76,8 @@ jobs:
                 name: Output files
             - name: listing files
               run: ls
+            - name: Calling the output of build job
+              run: echo "${{needs.build.outputs.script-file}}"
             - name: deploying....
               run: echo "deploying completed"
+# Artifacts are different than Job Outputs
