@@ -63,7 +63,7 @@ jobs:
                   package.json
             - name: Saving Job Outputs now artifacts #Saving Job Outputs
               id: first-job
-              run: find dist/assets/*.js -type f -execdis echo 'script-file={}' >> $GITHUB_OUTPUT ';'
+              run: find dist/assets/*.js -type f -execdir echo 'script-file={}' >> $GITHUB_OUTPUT ';'
             - name: Building....  
               run: echo "build completed"
     Deploy:
