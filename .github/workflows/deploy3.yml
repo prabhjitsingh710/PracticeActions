@@ -38,8 +38,18 @@ jobs:
               run: npm test
             - name: Testing....
               run: echo "Test completed"
-    Build:
+    Custom:
         needs: Test
+        runs-on: ubuntu-latest
+        steps: 
+            - name: Get code
+              uses: actions/checkout@v4
+            - name: fetch and cache dependencies 
+              uses: ./.github/actions/cached-depend #Made custom github actions
+            - name: Lint code
+              run: npm test
+    Build:
+        needs: Custom
         runs-on: ubuntu-latest
         outputs:
           script-file: ${{steps.first-job.outputs.script-file}} #Extracting output in this job
